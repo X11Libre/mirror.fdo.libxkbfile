@@ -620,7 +620,11 @@ ReadXkmSymbols(FILE *file, XkbFileInfo *result)
             if ((tmp = XkmGetCountedString(file, buf, 100)) < 1)
                 return -1;
             nRead += tmp;
-            if ((buf[0] != '\0') && (xkb->names)) {
+
+            if (!xkb->names)
+                continue;
+
+            if (buf[0] != '\0') {
                 Atom name;
 
                 name = XkbInternAtom(xkb->dpy, buf, 0);
