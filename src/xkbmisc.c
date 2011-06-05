@@ -91,7 +91,8 @@ _XkbKSCheckCase(KeySym ks)
             (ks == XK_ENG) || ((ks >= XK_Amacron) && (ks <= XK_Umacron))) {
             rtrn |= _XkbKSUpper;
         }
-        if (((ks >= XK_rcedilla) && (ks <= XK_tslash)) ||
+        if ((ks == XK_kra) ||
+            ((ks >= XK_rcedilla) && (ks <= XK_tslash)) ||
             (ks == XK_eng) || ((ks >= XK_amacron) && (ks <= XK_umacron))) {
             rtrn |= _XkbKSLower;
         }
