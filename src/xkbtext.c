@@ -1001,19 +1001,18 @@ CopyPtrBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     if (action->type == XkbSA_LockPtrBtn) {
         switch (act->flags & (XkbSA_LockNoUnlock | XkbSA_LockNoLock)) {
         case XkbSA_LockNoLock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=unlock");
+            TryCopyStr(buf, ",affect=unlock", sz);
             break;
         case XkbSA_LockNoUnlock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=lock");
+            TryCopyStr(buf, ",affect=lock", sz);
             break;
         case XkbSA_LockNoUnlock | XkbSA_LockNoLock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=neither");
+            TryCopyStr(buf, ",affect=neither", sz);
             break;
         default:
-            snprintf(tbuf, sizeof(tbuf), ",affect=both");
+            TryCopyStr(buf, ",affect=both", sz);
             break;
         }
-        TryCopyStr(buf, tbuf, sz);
     }
     return True;
 }
@@ -1351,19 +1350,18 @@ CopyDeviceBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     if (action->type == XkbSA_LockDeviceBtn) {
         switch (act->flags & (XkbSA_LockNoUnlock | XkbSA_LockNoLock)) {
         case XkbSA_LockNoLock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=unlock");
+            TryCopyStr(buf, ",affect=unlock", sz);
             break;
         case XkbSA_LockNoUnlock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=lock");
+            TryCopyStr(buf, ",affect=lock", sz);
             break;
         case XkbSA_LockNoUnlock | XkbSA_LockNoLock:
-            snprintf(tbuf, sizeof(tbuf), ",affect=neither");
+            TryCopyStr(buf, ",affect=neither", sz);
             break;
         default:
-            snprintf(tbuf, sizeof(tbuf), ",affect=both");
+            TryCopyStr(buf, ",affect=both", sz);
             break;
         }
-        TryCopyStr(buf, tbuf, sz);
     }
     return True;
 }
