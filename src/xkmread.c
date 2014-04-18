@@ -1107,7 +1107,8 @@ XkmReadTOC(FILE *file, xkmFileInfo *file_info,
         }
         return 0;
     }
-    fread(file_info, SIZEOF(xkmFileInfo), 1, file);
+    if (fread(file_info, SIZEOF(xkmFileInfo), 1, file) != 1)
+        return 0;
     size_toc = file_info->num_toc;
     if (size_toc > max_toc) {
 #ifdef DEBUG
@@ -1117,7 +1118,8 @@ XkmReadTOC(FILE *file, xkmFileInfo *file_info,
         size_toc = max_toc;
     }
     for (i = 0; i < size_toc; i++) {
-        fread(&toc[i], SIZEOF(xkmSectionInfo), 1, file);
+        if (fread(&toc[i], SIZEOF(xkmSectionInfo), 1, file) != 1)
+            return 0;
     }
     return 1;
 }
