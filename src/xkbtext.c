@@ -1045,6 +1045,7 @@ CopyISOLockArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     XkbISOAction *act;
     char tbuf[64];
 
+    memset(tbuf, 0, sizeof(tbuf));
     act = &action->iso;
     if (act->flags & XkbSA_ISODfltIsGroup) {
         TryCopyStr(tbuf, "group=", sz);
