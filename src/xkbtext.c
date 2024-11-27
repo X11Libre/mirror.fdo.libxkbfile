@@ -190,14 +190,14 @@ XkbVModMaskText(Display *       dpy,
                 len = strlen(tmp) + 1 + (str == buf ? 0 : 1);
                 if (format == XkbCFile)
                     len += 4;
-                if ((str - (buf + len)) <= BUFFER_SIZE) {
-                    if (str != buf) {
-                        if (format == XkbCFile)
-                            *str++ = '|';
-                        else
-                            *str++ = '+';
-                        len--;
-                    }
+                if ((str - buf) + len > BUFFER_SIZE)
+                    continue; /* Skip */
+                if (str != buf) {
+                    if (format == XkbCFile)
+                        *str++ = '|';
+                    else
+                        *str++ = '+';
+                    len--;
                 }
                 if (format == XkbCFile)
                     sprintf(str, "%sMask", tmp);
