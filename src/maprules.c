@@ -1034,9 +1034,8 @@ XkbRF_LoadRulesByName(char *base, char *locale, XkbRF_RulesPtr rules)
     if ((!base) || (!rules))
         return False;
     if (locale) {
-        if (strlen(base) + strlen(locale) + 2 > PATH_MAX)
+        if (snprintf(buf, sizeof(buf), "%s-%s", base, locale) >= (int) sizeof(buf))
             return False;
-        snprintf(buf, sizeof(buf), "%s-%s", base, locale);
     }
     else {
         if (strlen(base) + 1 > PATH_MAX)
@@ -1241,19 +1240,18 @@ XkbRF_LoadDescriptionsByName(char *base, char *locale, XkbRF_RulesPtr rules)
     if ((!base) || (!rules))
         return False;
     if (locale) {
-        if (strlen(base) + strlen(locale) + 6 > PATH_MAX)
+        if (snprintf(buf, sizeof(buf), "%s-%s.lst", base, locale) >= (int) sizeof(buf))
             return False;
-        snprintf(buf, sizeof(buf), "%s-%s.lst", base, locale);
     }
     else {
-        if (strlen(base) + 5 > PATH_MAX)
+        if (snprintf(buf, sizeof(buf), "%s.lst", base) >= (int) sizeof(buf))
             return False;
-        snprintf(buf, sizeof(buf), "%s.lst", base);
     }
 
     file = fopen(buf, "r" FOPEN_CLOEXEC);
     if ((!file) && (locale)) {  /* fallback if locale was specified */
-        snprintf(buf, sizeof(buf), "%s.lst", base);
+        if (snprintf(buf, sizeof(buf), "%s.lst", base) >= (int) sizeof(buf))
+            return False;
 
         file = fopen(buf, "r" FOPEN_CLOEXEC);
     }
