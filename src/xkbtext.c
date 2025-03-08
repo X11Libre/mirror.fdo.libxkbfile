@@ -119,7 +119,6 @@ XkbAtomText(Display *dpy, Atom atm, unsigned format)
 char *
 XkbVModIndexText(Display *dpy, XkbDescPtr xkb, unsigned ndx, unsigned format)
 {
-    register int len;
     register Atom *vmodNames;
     char *rtrn, *tmp;
 
@@ -138,17 +137,16 @@ XkbVModIndexText(Display *dpy, XkbDescPtr xkb, unsigned ndx, unsigned format)
         snprintf(tmp, 20, "%d", ndx);
     }
 
-    len = strlen(tmp) + 1;
-    if (format == XkbCFile)
-        len += 5;
-    if (len >= BUFFER_SIZE)
-        len = BUFFER_SIZE - 1;
-    rtrn = tbGetBuffer(len);
     if (format == XkbCFile) {
+        unsigned int len = strlen(tmp) + 6;
+
+        if (len >= BUFFER_SIZE)
+            len = BUFFER_SIZE - 1;
+        rtrn = tbGetBuffer(len);
         snprintf(rtrn, len, "vmod_%s", tmp);
     }
     else
-        strncpy(rtrn, tmp, len);
+        rtrn = tbGetBufferString(tmp);
     _XkbFree(tmp);
     return rtrn;
 }
