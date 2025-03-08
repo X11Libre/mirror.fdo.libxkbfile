@@ -1150,7 +1150,10 @@ XkmReadFileSection(FILE *           file,
         return 0;
     }
     fseek(file, toc->offset, SEEK_SET);
-    fread(&tmpTOC, SIZEOF(xkmSectionInfo), 1, file);
+    if ((int) fread(&tmpTOC, SIZEOF(xkmSectionInfo), 1, file) < 1) {
+        _XkbLibError(_XkbErrBadLength, "XkmReadFileSection", 0);
+        return 0;
+    }
     nRead = SIZEOF(xkmSectionInfo);
     if ((tmpTOC.type != toc->type) || (tmpTOC.format != toc->format) ||
         (tmpTOC.size != toc->size) || (tmpTOC.offset != toc->offset)) {
@@ -1225,7 +1228,10 @@ XkmReadFileSectionName(FILE *file, xkmSectionInfo *toc)
     case XkmSymbolsIndex:
     case XkmGeometryIndex:
         fseek(file, toc->offset, SEEK_SET);
-        fread(&tmpTOC, SIZEOF(xkmSectionInfo), 1, file);
+        if ((int) fread(&tmpTOC, SIZEOF(xkmSectionInfo), 1, file) < 1) {
+            _XkbLibError(_XkbErrBadLength, "XkmReadFileSectionName", 0);
+            return NULL;
+        }
         if ((tmpTOC.type != toc->type) || (tmpTOC.format != toc->format) ||
             (tmpTOC.size != toc->size) || (tmpTOC.offset != toc->offset)) {
             _XkbLibError(_XkbErrIllegalContents, "XkmReadFileSectionName", 0);
