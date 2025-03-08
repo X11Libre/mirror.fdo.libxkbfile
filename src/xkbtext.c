@@ -822,7 +822,7 @@ XkbDoodadTypeText(unsigned type, unsigned format)
     return buf;
 }
 
-static char *actionTypeNames[XkbSA_NumActions] = {
+static const char *actionTypeNames[XkbSA_NumActions] = {
     "NoAction",
     "SetMods",      "LatchMods",    "LockMods",
     "SetGroup",     "LatchGroup",   "LockGroup",
@@ -841,17 +841,17 @@ char *
 XkbActionTypeText(unsigned type, unsigned format)
 {
     static char buf[32];
-    char *rtrn;
 
     if (type <= XkbSA_LastAction) {
-        rtrn = actionTypeNames[type];
-        if (format == XkbCFile) {
+        const char *rtrn = actionTypeNames[type];
+
+        if (format == XkbCFile)
             snprintf(buf, sizeof(buf), "XkbSA_%s", rtrn);
-            return buf;
-        }
-        return rtrn;
+        else
+            snprintf(buf, sizeof(buf), "%s", rtrn);
     }
-    snprintf(buf, sizeof(buf), "Private");
+    else
+        snprintf(buf, sizeof(buf), "Private");
     return buf;
 }
 
