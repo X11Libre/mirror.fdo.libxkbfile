@@ -30,6 +30,9 @@
 #include <config.h>
 #endif
 
+/* Tell XKBConfig.h to define the field in  _XkbConfigField as const char * */
+#define  _XkbCF_Field_Const
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
