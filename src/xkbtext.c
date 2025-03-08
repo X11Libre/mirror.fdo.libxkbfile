@@ -408,7 +408,7 @@ XkbKeyNameText(char *name, unsigned format)
 
 /***====================================================================***/
 
-static char *siMatchText[5] = {
+static const char *siMatchText[5] = {
     "NoneOf", "AnyOfOrNone", "AnyOf", "AllOf", "Exactly"
 };
 
@@ -417,7 +417,7 @@ XkbSIMatchText(unsigned type, unsigned format)
 {
     static char buf[40];
 
-    char *rtrn;
+    const char *rtrn;
 
     switch (type & XkbSI_OpMask) {
     case XkbSI_NoneOf:      rtrn = siMatchText[0]; break;
@@ -434,9 +434,11 @@ XkbSIMatchText(unsigned type, unsigned format)
             snprintf(buf, sizeof(buf), "XkbSI_LevelOneOnly|XkbSI_%s", rtrn);
         else
             snprintf(buf, sizeof(buf), "XkbSI_%s", rtrn);
-        rtrn = buf;
     }
-    return rtrn;
+    else {
+        snprintf(buf, sizeof(buf), "%s", rtrn);
+    }
+    return buf;
 }
 
 /***====================================================================***/
