@@ -250,7 +250,7 @@ XkbWriteXKBKeymapForNames(FILE *                file,
     unsigned wantNames, wantConfig, wantDflts;
     XkbFileInfo finfo;
 
-    bzero(&finfo, sizeof(XkbFileInfo));
+    memset(&finfo, 0, sizeof(XkbFileInfo));
 
     complete = 0;
     if ((name = names->keymap) == NULL)

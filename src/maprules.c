@@ -299,7 +299,7 @@ SetUpRemap(InputLine *line, RemapSpec *remap)
     l_ndx_present = v_ndx_present = present = 0;
     str = &line->line[1];
     len = remap->number;
-    bzero((char *) remap, sizeof(RemapSpec));
+    memset(remap, 0, sizeof(RemapSpec));
     remap->number = len;
     while ((tok = _XStrtok(str, " ", strtok_buf)) != NULL) {
 #ifdef DEBUG
@@ -464,7 +464,7 @@ CheckLine(InputLine *    line,
         PR_DEBUG("Illegal line of data ignored\n");
         return False;
     }
-    bzero((char *) &tmp, sizeof(FileSpec));
+    memset(&tmp, 0, sizeof(FileSpec));
     str = line->line;
     for (nread = 0; (tok = _XStrtok(str, " ", strtok_buf)) != NULL; nread++) {
         str = NULL;
@@ -550,7 +550,7 @@ static Bool
 MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
 {
 
-    bzero((char *) mdefs, sizeof(XkbRF_MultiDefsRec));
+    memset(mdefs, 0, sizeof(XkbRF_MultiDefsRec));
     mdefs->model = defs->model;
     mdefs->options = _XkbDupString(defs->options);
     if (mdefs->options)
@@ -917,7 +917,7 @@ XkbRF_GetComponents(XkbRF_RulesPtr       rules,
 
     MakeMultiDefs(&mdefs, defs);
 
-    bzero((char *) names, sizeof(XkbComponentNamesRec));
+    memset(names, 0, sizeof(XkbComponentNamesRec));
     XkbRF_ClearPartialMatches(rules);
     XkbRF_CheckApplyRules(rules, &mdefs, names, XkbRF_Normal);
     XkbRF_ApplyPartialMatches(rules, names);
@@ -964,7 +964,7 @@ XkbRF_AddRule(XkbRF_RulesPtr rules)
 #endif
         return NULL;
     }
-    bzero((char *) &rules->rules[rules->num_rules], sizeof(XkbRF_RuleRec));
+    memset(&rules->rules[rules->num_rules], 0, sizeof(XkbRF_RuleRec));
     return &rules->rules[rules->num_rules++];
 }
 
@@ -986,7 +986,7 @@ XkbRF_AddGroup(XkbRF_RulesPtr rules)
         return NULL;
     }
 
-    bzero((char *) &rules->groups[rules->num_groups], sizeof(XkbRF_GroupRec));
+    memset(&rules->groups[rules->num_groups], 0, sizeof(XkbRF_GroupRec));
     return &rules->groups[rules->num_groups++];
 }
 
@@ -1000,21 +1000,21 @@ XkbRF_LoadRules(FILE *file, XkbRF_RulesPtr rules)
 
     if (!(rules && file))
         return False;
-    bzero((char *) &remap, sizeof(RemapSpec));
-    bzero((char *) &tgroup, sizeof(XkbRF_GroupRec));
+    memset(&remap, 0, sizeof(RemapSpec));
+    memset(&tgroup, 0, sizeof(XkbRF_GroupRec));
     InitInputLine(&line);
     while (GetInputLine(file, &line, True)) {
         if (CheckLine(&line, &remap, &trule, &tgroup)) {
             if (tgroup.number) {
                 if ((group = XkbRF_AddGroup(rules)) != NULL) {
                     *group = tgroup;
-                    bzero((char *) &tgroup, sizeof(XkbRF_GroupRec));
+                    memset(&tgroup, 0, sizeof(XkbRF_GroupRec));
                 }
             }
             else {
                 if ((rule = XkbRF_AddRule(rules)) != NULL) {
                     *rule = trule;
-                    bzero((char *) &trule, sizeof(XkbRF_RuleRec));
+                    memset(&trule, 0, sizeof(XkbRF_RuleRec));
                 }
             }
         }
@@ -1127,7 +1127,7 @@ XkbRF_AddVarToDescribe(XkbRF_RulesPtr rules, char *name)
         return NULL;
     }
     rules->extra_names[rules->num_extra] = _XkbDupString(name);
-    bzero(&rules->extra[rules->num_extra], sizeof(XkbRF_DescribeVarsRec));
+    memset(&rules->extra[rules->num_extra], 0, sizeof(XkbRF_DescribeVarsRec));
     return &rules->extra[rules->num_extra++];
 }
 
@@ -1139,7 +1139,7 @@ XkbRF_LoadDescriptions(FILE *file, XkbRF_RulesPtr rules)
     char *tok;
     int len, headingtype, extra_ndx = 0;
 
-    bzero((char *) &tmp, sizeof(XkbRF_VarDescRec));
+    memset(&tmp, 0, sizeof(XkbRF_VarDescRec));
     headingtype = HEAD_NONE;
     InitInputLine(&line);
     for (; GetInputLine(file, &line, False); line.num_line = 0) {
@@ -1375,7 +1375,7 @@ XkbRF_Free(XkbRF_RulesPtr rules, Bool freeRules)
                 _XkbFree(rule->geometry);
             if (rule->keymap)
                 _XkbFree(rule->keymap);
-            bzero((char *) rule, sizeof(XkbRF_RuleRec));
+            memset(rule, 0, sizeof(XkbRF_RuleRec));
         }
         _XkbFree(rules->rules);
         rules->num_rules = rules->sz_rules = 0;
@@ -1421,7 +1421,7 @@ XkbRF_GetNamesProp(Display * dpy, char **rf_rtrn, XkbRF_VarDefsPtr vd_rtrn)
         return False;
     if (rf_rtrn)
         *rf_rtrn = NULL;
-    (void) bzero((char *) vd_rtrn, sizeof(XkbRF_VarDefsRec));
+    (void) memset(vd_rtrn, 0, sizeof(XkbRF_VarDefsRec));
     if ((bytes_after > 0) || (actual_type != XA_STRING) || (fmt != 8)) {
         if (data)
             XFree(data);

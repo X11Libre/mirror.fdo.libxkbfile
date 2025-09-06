@@ -1233,10 +1233,10 @@ XkbCFFreeRtrn(XkbConfigRtrnPtr rtrn, XkbConfigFieldsPtr fields, XkbDescPtr xkb)
     }
     for (tmp = rtrn->priv; tmp != NULL; tmp = next) {
         next = tmp->next;
-        bzero((char *) tmp, sizeof(XkbConfigRtrnPrivRec));
+        memset(tmp, 0, sizeof(XkbConfigRtrnPrivRec));
         _XkbFree(tmp);
     }
-    bzero((char *) rtrn, sizeof(XkbConfigRtrnRec));
+    memset(rtrn, 0, sizeof(XkbConfigRtrnRec));
     return;
 }
 
@@ -1253,7 +1253,7 @@ XkbCFParse(FILE *file, XkbConfigFieldsPtr fields,
     for (tok = 0, tmp = fields; tmp != NULL; tmp = tmp->next, tok++) {
         fields->cfg_id = tok;
     }
-    bzero((char *) rtrn, sizeof(XkbConfigRtrnRec));
+    memset(rtrn, 0, sizeof(XkbConfigRtrnRec));
     rtrn->line = 1;
     rtrn->click_volume = -1;
     rtrn->bell_volume = -1;

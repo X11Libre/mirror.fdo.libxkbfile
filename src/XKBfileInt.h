@@ -57,7 +57,7 @@
 	((o)?(t *)realloc((o),(n)*sizeof(t)):_XkbTypedCalloc(n,t))
 #define	_XkbTypedReallocF(o,n,t) \
 	((o)?(t *)reallocf((o),(n)*sizeof(t)):_XkbTypedCalloc(n,t))
-#define	_XkbClearElems(a,f,l,t)	bzero(&(a)[f],((l)-(f)+1)*sizeof(t))
+#define	_XkbClearElems(a,f,l,t)	memset(&(a)[f], 0, ((l)-(f)+1)*sizeof(t))
 #define	_XkbFree(p)		free(p)
 
 #ifndef PATH_MAX

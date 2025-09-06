@@ -68,7 +68,7 @@ XkmInsureSize(XPointer oldPtr, int oldCount, int *newCountRtrn, int elemSize)
         if (oldPtr != NULL) {
             char *tmp = (char *) oldPtr;
 
-            bzero(&tmp[oldCount * elemSize], (newCount - oldCount) * elemSize);
+            memset(&tmp[oldCount * elemSize], 0, (newCount - oldCount) * elemSize);
         }
     }
     else if (newCount < oldCount) {
@@ -667,8 +667,8 @@ ReadXkmSymbols(FILE *file, XkbFileInfo *result)
             return -1;
         }
         nRead += tmp * SIZEOF(xkmKeySymMapDesc);
-        bzero((char *) typeName, XkbNumKbdGroups * sizeof(Atom));
-        bzero((char *) type, XkbNumKbdGroups * sizeof(XkbKeyTypePtr));
+        memset(typeName, 0, XkbNumKbdGroups * sizeof(Atom));
+        memset(type, 0, XkbNumKbdGroups * sizeof(XkbKeyTypePtr));
         if (wireMap.flags & XkmKeyHasTypes) {
             register int g;
 
