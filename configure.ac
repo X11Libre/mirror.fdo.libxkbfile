@@ -53,7 +53,7 @@ AC_CHECK_FUNC([strcasecmp], [],
         AC_MSG_ERROR([No replacement found for strcasecmp])))
 
 # Obtain compiler/linker options for dependencies
-PKG_CHECK_MODULES(XKBFILE, [x11 kbproto xproto >= 7.0.9])
+PKG_CHECK_MODULES(XKBFILE, [x11 kbproto xproto >= 7.0.22])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_SYS_LARGEFILE

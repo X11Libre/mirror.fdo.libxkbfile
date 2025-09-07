@@ -18,7 +18,7 @@ libxkbfile_sources = [
 deps = [
     dependency('kbproto'),
     dependency('x11'),
-    dependency('xproto', version: '>= 7.0.9')
+    dependency('xproto', version: '>= 7.0.22')
 ]
 
 includes = include_directories(

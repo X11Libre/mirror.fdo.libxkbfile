@@ -221,13 +221,12 @@ XkbWriteSectionFromName(FILE *file, const char *sectionName, const char *name)
 #define	NEED_DESC(n) ((!n)||((n)[0]=='+')||((n)[0]=='|')||(strchr((n),'%')))
 #define	COMPLETE(n)  ((n)&&(!NEED_DESC(n)))
 
-/* ARGSUSED */
 static void
 _AddIncl(FILE *         file,
-         XkbFileInfo *  result,
-         Bool           topLevel,
-         Bool           showImplicit,
-         int            index,
+         _X_UNUSED XkbFileInfo *  result,
+         _X_UNUSED Bool           topLevel,
+         _X_UNUSED Bool           showImplicit,
+         _X_UNUSED int            index,
          void *         priv)
 {
     if ((priv) && (strcmp((char *) priv, "%") != 0))
@@ -434,9 +433,8 @@ XkbWriteXKBKeymapForNames(FILE *                file,
 
 /***====================================================================***/
 
-/*ARGSUSED*/
 Status
-XkbMergeFile(XkbDescPtr xkb, XkbFileInfo finfo)
+XkbMergeFile(_X_UNUSED XkbDescPtr xkb, _X_UNUSED XkbFileInfo finfo)
 {
     return BadImplementation;
 }

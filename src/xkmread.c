@@ -814,7 +814,7 @@ ReadXkmGeomDoodad(FILE *file, Display *dpy,
 
 static int
 ReadXkmGeomOverlay(FILE *file, Display *dpy,
-                   XkbGeometryPtr geom, XkbSectionPtr section)
+                   _X_UNUSED XkbGeometryPtr geom, XkbSectionPtr section)
 {
     char buf[100];
     unsigned tmp;

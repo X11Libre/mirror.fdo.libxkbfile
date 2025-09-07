@@ -1172,10 +1172,9 @@ WriteXKMGeometry(FILE *file, XkbFileInfo *result)
 
 /***====================================================================***/
 
-/*ARGSUSED*/
 static int
 GetXKMKeyNamesTOC(XkbFileInfo *result, XkmInfo *info,
-                  int max_toc, xkmSectionInfo *toc_rtrn)
+                  _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1188,10 +1187,9 @@ GetXKMKeyNamesTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
 GetXKMTypesTOC(XkbFileInfo *result, XkmInfo *info,
-               int max_toc, xkmSectionInfo *toc_rtrn)
+               _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1204,10 +1202,9 @@ GetXKMTypesTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
 GetXKMCompatMapTOC(XkbFileInfo *result, XkmInfo *info,
-                   int max_toc, xkmSectionInfo *toc_rtrn)
+                   _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1222,10 +1219,9 @@ GetXKMCompatMapTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
 GetXKMSemanticsTOC(XkbFileInfo *result, XkmInfo *info,
-                   int max_toc, xkmSectionInfo *toc_rtrn)
+                   _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1242,10 +1238,9 @@ GetXKMSemanticsTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
 GetXKMLayoutTOC(XkbFileInfo *result, XkmInfo *info,
-                int max_toc, xkmSectionInfo *toc_rtrn)
+                _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1266,10 +1261,9 @@ GetXKMLayoutTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
 GetXKMKeymapTOC(XkbFileInfo *result, XkmInfo *info,
-                int max_toc, xkmSectionInfo *toc_rtrn)
+                _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;
@@ -1292,10 +1286,9 @@ GetXKMKeymapTOC(XkbFileInfo *result, XkmInfo *info,
     return num_toc;
 }
 
-/*ARGSUSED*/
 static int
-GetXKMGeometryTOC(XkbFileInfo *result, XkmInfo *info,
-                  int max_toc, xkmSectionInfo *toc_rtrn)
+GetXKMGeometryTOC(XkbFileInfo *result, _X_UNUSED XkmInfo *info,
+                  _X_UNUSED int max_toc, xkmSectionInfo *toc_rtrn)
 {
     int num_toc;
     int total_size;

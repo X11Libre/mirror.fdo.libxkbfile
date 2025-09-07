@@ -445,12 +445,11 @@ XkbCFApplyMods(XkbConfigRtrnPtr rtrn, int what, XkbConfigModInfoPtr info)
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
 DefaultParser(FILE *             file,
-              XkbConfigFieldsPtr fields,
+              _X_UNUSED XkbConfigFieldsPtr fields,
               XkbConfigFieldPtr  field,
-              XkbDescPtr         xkb,
+              _X_UNUSED XkbDescPtr         xkb,
               XkbConfigRtrnPtr   rtrn)
 {
     int tok;
@@ -1042,9 +1041,8 @@ DefaultApplyControls(XkbConfigRtrnPtr rtrn, XkbDescPtr xkb)
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-DefaultFinish(XkbConfigFieldsPtr fields, XkbDescPtr xkb,
+DefaultFinish(_X_UNUSED XkbConfigFieldsPtr fields, XkbDescPtr xkb,
               XkbConfigRtrnPtr rtrn, int what)
 {
     if ((what == XkbCF_Destroy) || (what == XkbCF_CleanUp))
@@ -1296,7 +1294,6 @@ XkbCFParse(FILE *file, XkbConfigFieldsPtr fields,
     return False;
 }
 
-/*ARGSUSED*/
 void
 XkbCFReportError(FILE *file, char *name, int error, int line)
 {

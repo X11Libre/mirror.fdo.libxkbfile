@@ -315,9 +315,8 @@ XkbModMaskText(unsigned mask, unsigned format)
 
 /***====================================================================***/
 
-/*ARGSUSED*/
 char *
-XkbConfigText(unsigned config, unsigned format)
+XkbConfigText(unsigned config, _X_UNUSED unsigned format)
 {
     static char *buf;
     const int bufsize = 32;
@@ -874,10 +873,10 @@ TryCopyStr(char *to, const char *from, int *pLeft)
     return False;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyNoActionArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                 char *buf, int *sz)
+CopyNoActionArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                 _X_UNUSED XkbAction *action,
+                 _X_UNUSED char *buf, _X_UNUSED int *sz)
 {
     return True;
 }
@@ -924,10 +923,9 @@ CopyModActionArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyGroupActionArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                    char *buf, int *sz)
+CopyGroupActionArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                    XkbAction *action, char *buf, int *sz)
 {
     XkbGroupAction *act;
     char tbuf[32];
@@ -950,10 +948,9 @@ CopyGroupActionArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyMovePtrArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                char *buf, int *sz)
+CopyMovePtrArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                XkbAction *action, char *buf, int *sz)
 {
     XkbPtrAction *act;
     int x, y;
@@ -978,10 +975,9 @@ CopyMovePtrArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyPtrBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-               char *buf, int *sz)
+CopyPtrBtnArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+               XkbAction *action, char *buf, int *sz)
 {
     XkbPtrBtnAction *act;
     char tbuf[32];
@@ -1017,10 +1013,9 @@ CopyPtrBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopySetPtrDfltArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                   char *buf, int *sz)
+CopySetPtrDfltArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                   XkbAction *action, char *buf, int *sz)
 {
     XkbPtrDfltAction *act;
     char tbuf[32];
@@ -1122,10 +1117,9 @@ CopyISOLockArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopySwitchScreenArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                     char *buf, int *sz)
+CopySwitchScreenArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                     XkbAction *action, char *buf, int *sz)
 {
     XkbSwitchScreenAction *act;
     char tbuf[32];
@@ -1143,10 +1137,9 @@ CopySwitchScreenArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopySetLockControlsArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                        char *buf, int *sz)
+CopySetLockControlsArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                        XkbAction *action, char *buf, int *sz)
 {
     XkbCtrlsAction *act;
     unsigned tmp;
@@ -1244,10 +1237,9 @@ CopySetLockControlsArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyActionMessageArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                      char *buf, int *sz)
+CopyActionMessageArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                      XkbAction *action, char *buf, int *sz)
 {
     XkbMessageAction *act;
     unsigned all;
@@ -1329,10 +1321,9 @@ CopyRedirectKeyArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyDeviceBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-                  char *buf, int *sz)
+CopyDeviceBtnArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+                  XkbAction *action, char *buf, int *sz)
 {
     XkbDeviceBtnAction *act;
     char tbuf[32];
@@ -1366,10 +1357,9 @@ CopyDeviceBtnArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
     return True;
 }
 
-/*ARGSUSED*/
 static Bool
-CopyOtherArgs(Display *dpy, XkbDescPtr xkb, XkbAction *action,
-              char *buf, int *sz)
+CopyOtherArgs(_X_UNUSED Display *dpy, _X_UNUSED XkbDescPtr xkb,
+              XkbAction *action, char *buf, int *sz)
 {
     XkbAnyAction *act;
     char tbuf[32];
