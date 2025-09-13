@@ -4,7 +4,7 @@
 # Please see the ci-templates documentation for details:
 # https://freedesktop.pages.freedesktop.org/ci-templates/
 
-.templates_sha: &template_sha 185ede0e9b9b1924b92306ab8b882a6294e92613 # see https://docs.gitlab.com/ee/ci/yaml/#includefile
+.templates_sha: &template_sha aec7a6ce7bb38902c70641526f6611e27141784a # see https://docs.gitlab.com/ee/ci/yaml/#includefile
 
 
 include:
@@ -34,15 +34,12 @@ variables:
   # The tag should be updated each time the list of packages is updated.
   # Changing a tag forces the associated image to be rebuilt.
   # Note: the tag has no meaning, we use a date format purely for readability
-  FDO_DISTRIBUTION_TAG: '2025-02-09.0'
-  # minimal set of packages required to build and install either way
+  FDO_DISTRIBUTION_TAG: '2025-09-13.0'
+  # minimal set of packages required to build and install with any build tool
   BASE_PACKAGES: 'git gcc pkgconf xorgproto libx11'
-  # packages needed to build and install with each set of tools
-  AUTOTOOLS_PACKAGES: 'autoconf automake libtool make xorg-util-macros'
+  # packages needed to build and install with meson
   MESON_PACKAGES: 'meson ninja'
-  # extra packages we need for comparing autotools & meson builds
-  EXTRA_PACKAGES: 'diffoscope diffutils findutils jq'
-  FDO_DISTRIBUTION_PACKAGES: $BASE_PACKAGES $AUTOTOOLS_PACKAGES $MESON_PACKAGES $EXTRA_PACKAGES
+  FDO_DISTRIBUTION_PACKAGES: $BASE_PACKAGES $MESON_PACKAGES
 
 
 #
@@ -104,70 +101,3 @@ meson:
     - meson compile -C builddir
     - meson test -C builddir
     - meson install -C builddir
-
-autotools:
-  extends:
-    - .fdo.distribution-image@arch
-  stage: build
-  script:
-    - mkdir -p ../_inst _build
-    - autoreconf -ivf
-    - pushd _build
-    - ../configure --prefix="$PWD/../_inst"
-    - make check
-    - make install
-    - make distcheck
-    - mv libxkbfile*.tar.gz ..
-    - popd
-  artifacts:
-    paths:
-      - libxkbfile*.tar.gz
-
-meson from tarball:
-  extends:
-    - .fdo.distribution-image@arch
-  stage: test
-  script:
-    - mkdir -p _tarball_build
-    - tar xf libxkbfile-*.tar.gz -C _tarball_build
-    - pushd _tarball_build/libxkbfile-*
-    - meson setup builddir
-    - meson compile -C builddir
-    - meson test -C builddir
-  needs:
-    - autotools
-  variables:
-    GIT_STRATEGY: none
-
-compare meson and autotools:
-  extends:
-    - .fdo.distribution-image@arch
-  stage: test
-  script:
-    - mkdir -p $PWD/_meson_inst $PWD/_autotools_inst
-    - CFLAGS="-O2 -fno-strict-aliasing"
-      meson setup builddir --prefix=/usr --buildtype=plain
-       -Ddefault_library=shared
-    - meson compile -C builddir -v
-    - DESTDIR=$PWD/_meson_inst meson install -C builddir
-    - ./autogen.sh --prefix=/usr --enable-shared --disable-static
-      CFLAGS="-O2 -D_FILE_OFFSET_BITS=64"
-    - make V=1 && make install  DESTDIR=$PWD/_autotools_inst
-    # get rid of expected differences between the two
-    - rm -f $PWD/_autotools_inst/usr/lib/lib*.la
-    - rm -f $PWD/_autotools_inst/usr/lib/libxkbfile.so
-    - ln -s libxkbfile.so.1 $PWD/_autotools_inst/usr/lib/libxkbfile.so
-    - find $PWD/_meson_inst $PWD/_autotools_inst
-      -exec touch -h -r $PWD/_meson_inst/ {} \+
-    - diffoscope --text-color=always _autotools_inst _meson_inst
-
-check versions are in sync:
-  extends:
-    - .fdo.distribution-image@arch
-  stage: test
-  script:
-    - autoreconf -ivf
-    - ./configure --version | head -n 1 | sed -e 's/libxkbfile configure //' > autotools.version
-    - meson introspect meson.build --projectinfo | jq -r '.version' > meson.version
-    - diff -u autotools.version meson.version ||
-      (echo "ERROR - autotools and meson versions not in sync" && false)
