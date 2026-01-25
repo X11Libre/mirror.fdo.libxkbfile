@@ -1,5 +1,5 @@
 project('libxkbfile', 'c',
-        version: '1.1.3',
+        version: '1.2.0',
         meson_version: '>= 0.57.0',
         license: 'MIT'
 )
