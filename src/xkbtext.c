@@ -1446,7 +1446,7 @@ XkbActionText(Display *dpy, XkbDescPtr xkb, XkbAction *action, unsigned format)
 char *
 XkbBehaviorText(XkbDescPtr xkb, XkbBehavior * behavior, unsigned format)
 {
-    char buf[256];
+    char buf[256] = "";
 
     if (format == XkbCFile) {
         if (behavior->type == XkbKB_Default)
