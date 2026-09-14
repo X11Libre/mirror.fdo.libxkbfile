@@ -80,7 +80,7 @@ XkmInsureSize(XPointer oldPtr, int oldCount, int *newCountRtrn, int elemSize)
 #define	XkmInsureTypedSize(p,o,n,t) ((p)=((t *)XkmInsureSize((char *)(p),(o),(n),sizeof(t))))
 
 static CARD8
-XkmGetCARD8(FILE * file, int *pNRead)
+XkmGetCARD8(FILE * file, ssize_t *pNRead)
 {
     int tmp;
 
@@ -91,7 +91,7 @@ XkmGetCARD8(FILE * file, int *pNRead)
 }
 
 static CARD16
-XkmGetCARD16(FILE * file, int *pNRead)
+XkmGetCARD16(FILE * file, ssize_t *pNRead)
 {
     CARD16 val;
 
@@ -101,7 +101,7 @@ XkmGetCARD16(FILE * file, int *pNRead)
 }
 
 static CARD32
-XkmGetCARD32(FILE * file, int *pNRead)
+XkmGetCARD32(FILE * file, ssize_t *pNRead)
 {
     CARD32 val;
 
@@ -110,10 +110,10 @@ XkmGetCARD32(FILE * file, int *pNRead)
     return val;
 }
 
-static int
+static ssize_t
 XkmSkipPadding(FILE * file, unsigned pad)
 {
-    int nRead = 0;
+    ssize_t nRead = 0;
 
     for (unsigned int i = 0; i < pad; i++) {
         if (getc(file) != EOF)
@@ -122,10 +122,11 @@ XkmSkipPadding(FILE * file, unsigned pad)
     return nRead;
 }
 
-static int
+static ssize_t
 XkmGetCountedString(FILE * file, char *str, int max_len)
 {
-    int count, nRead = 0;
+    int count;
+    ssize_t nRead = 0;
 
     count = XkmGetCARD16(file, &nRead);
     if (count > 0) {
@@ -157,12 +158,12 @@ XkmGetCountedString(FILE * file, char *str, int max_len)
 
 /***====================================================================***/
 
-static int
+static ssize_t
 ReadXkmVirtualMods(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 {
     register unsigned int i, bit;
     unsigned int bound, named, tmp;
-    int nRead = 0;
+    ssize_t nRead = 0;
     XkbDescPtr xkb;
 
     xkb = result->xkb;
@@ -202,12 +203,12 @@ ReadXkmVirtualMods(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 
 /***====================================================================***/
 
-static int
+static ssize_t
 ReadXkmKeycodes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 {
     unsigned int i;
     unsigned minKC, maxKC, nAl;
-    int nRead = 0;
+    ssize_t nRead = 0;
     char name[100];
     XkbKeyNamePtr pN;
     XkbDescPtr xkb;
@@ -271,13 +272,13 @@ ReadXkmKeycodes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 
 /***====================================================================***/
 
-static int
+static ssize_t
 ReadXkmKeyTypes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 {
     register unsigned i, n;
     unsigned num_types;
-    int nRead = 0;
-    int tmp;
+    ssize_t tmp, nRead = 0;
+    int nMapEntries;
     XkbKeyTypePtr type;
     xkmKeyTypeDesc wire;
     XkbKTMapEntryPtr entry;
@@ -324,8 +325,9 @@ ReadXkmKeyTypes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
             _XkbLibError(_XkbErrBadTypeWidth, "ReadXkmKeyTypes", i);
             return -1;
         }
-        tmp = wire.nMapEntries;
-        XkmInsureTypedSize(type->map, type->map_count, &tmp, XkbKTMapEntryRec);
+        nMapEntries = wire.nMapEntries;
+        XkmInsureTypedSize(type->map, type->map_count, &nMapEntries,
+                           XkbKTMapEntryRec);
         if ((wire.nMapEntries > 0) && (type->map == NULL)) {
             _XkbLibError(_XkbErrBadValue, "ReadXkmKeyTypes", wire.nMapEntries);
             return -1;
@@ -360,7 +362,7 @@ ReadXkmKeyTypes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
             xkmModsDesc p_entry;
             XkbModsPtr pre;
 
-            XkmInsureTypedSize(type->preserve, type->map_count, &tmp,
+            XkmInsureTypedSize(type->preserve, type->map_count, &nMapEntries,
                                XkbModsRec);
             if (type->preserve == NULL) {
                 _XkbLibError(_XkbErrBadMatch, "ReadXkmKeycodes", 0);
@@ -414,15 +416,14 @@ ReadXkmKeyTypes(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 
 /***====================================================================***/
 
-static int
+static ssize_t
 ReadXkmCompatMap(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 {
     unsigned num_si, groups;
     char name[100];
     XkbSymInterpretPtr interp;
     xkmSymInterpretDesc wire;
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
     XkbDescPtr xkb;
     XkbCompatMapPtr compat;
 
@@ -495,14 +496,13 @@ ReadXkmCompatMap(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
     return nRead;
 }
 
-static int
+static ssize_t
 ReadXkmIndicators(FILE *file, XkbFileInfo *result, XkbChangesPtr changes)
 {
     register unsigned nLEDs;
     xkmIndicatorMapDesc wire;
     char buf[100];
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
     XkbDescPtr xkb;
 
     xkb = result->xkb;
@@ -584,14 +584,14 @@ FindTypeForKey(XkbDescPtr xkb, Atom name, unsigned width, KeySym *syms)
     return &xkb->map->types[XkbTwoLevelIndex];
 }
 
-static int
+static ssize_t
 ReadXkmSymbols(FILE *file, XkbFileInfo *result)
 {
     register int i, g, s, totalVModMaps;
     xkmKeySymMapDesc wireMap;
     char buf[100];
-    unsigned minKC, maxKC, groupNames, tmp;
-    int nRead = 0;
+    unsigned minKC, maxKC, groupNames;
+    ssize_t tmp, nRead = 0;
     XkbDescPtr xkb;
 
     xkb = result->xkb;
@@ -774,15 +774,14 @@ ReadXkmSymbols(FILE *file, XkbFileInfo *result)
     return nRead;
 }
 
-static int
+static ssize_t
 ReadXkmGeomDoodad(FILE *file, Display *dpy,
                   XkbGeometryPtr geom, XkbSectionPtr section)
 {
     XkbDoodadPtr doodad;
     xkmDoodadDesc doodadWire;
     char buf[100];
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
 
     nRead += XkmGetCountedString(file, buf, 100);
     tmp = fread(&doodadWire, SIZEOF(xkmDoodadDesc), 1, file);
@@ -830,13 +829,12 @@ ReadXkmGeomDoodad(FILE *file, Display *dpy,
     return nRead;
 }
 
-static int
+static ssize_t
 ReadXkmGeomOverlay(FILE *file, Display *dpy,
                    _X_UNUSED XkbGeometryPtr geom, XkbSectionPtr section)
 {
     char buf[100];
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
     XkbOverlayPtr ol;
     XkbOverlayRowPtr row;
     xkmOverlayDesc olWire;
@@ -872,14 +870,13 @@ ReadXkmGeomOverlay(FILE *file, Display *dpy,
     return nRead;
 }
 
-static int
+static ssize_t
 ReadXkmGeomSection(FILE *file, Display *dpy, XkbGeometryPtr geom)
 {
     register int i;
     XkbSectionPtr section;
     xkmSectionDesc sectionWire;
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
     char buf[100];
     Atom nameAtom;
 
@@ -952,13 +949,12 @@ ReadXkmGeomSection(FILE *file, Display *dpy, XkbGeometryPtr geom)
     return nRead;
 }
 
-static int
+static ssize_t
 ReadXkmGeometry(FILE *file, XkbFileInfo *result)
 {
     register int i;
     char buf[100];
-    unsigned tmp;
-    int nRead = 0;
+    ssize_t tmp, nRead = 0;
     xkmGeometryDesc wireGeom;
     XkbGeometryPtr geom;
     XkbGeometrySizesRec sizes;
@@ -1095,7 +1091,7 @@ Bool
 XkmProbe(FILE *file)
 {
     unsigned hdr, tmp;
-    int nRead = 0;
+    ssize_t nRead = 0;
 
     hdr = (('x' << 24) | ('k' << 16) | ('m' << 8) | XkmFileVersion);
     tmp = XkmGetCARD32(file, &nRead);
@@ -1113,7 +1109,7 @@ XkmReadTOC(FILE *file, xkmFileInfo *file_info,
            int max_toc, xkmSectionInfo *toc)
 {
     unsigned hdr, tmp;
-    int nRead = 0;
+    ssize_t nRead = 0;
     unsigned i, size_toc;
 
     hdr = (('x' << 24) | ('k' << 16) | ('m' << 8) | XkmFileVersion);
@@ -1163,7 +1159,7 @@ XkmReadFileSection(FILE *           file,
                    unsigned *       loaded_rtrn)
 {
     xkmSectionInfo tmpTOC;
-    int nRead;
+    ssize_t nRead;
 
     if ((!result) || (!result->xkb)) {
         _XkbLibError(_XkbErrBadMatch, "XkmReadFileSection", 0);
@@ -1277,7 +1273,7 @@ XkmReadFile(FILE *file, unsigned need, unsigned want, XkbFileInfo *result)
     register unsigned i;
     xkmSectionInfo toc[MAX_TOC], tmpTOC;
     xkmFileInfo fileInfo;
-    unsigned tmp, nRead = 0;
+    ssize_t tmp, nRead = 0;
     unsigned which = need | want;
 
     if (!XkmReadTOC(file, &fileInfo, MAX_TOC, toc))
