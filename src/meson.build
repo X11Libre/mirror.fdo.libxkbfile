@@ -32,7 +32,8 @@ library('xkbfile',
         include_directories: includes,
         install: true,
         sources: libxkbfile_sources,
-        version: '1.0.2'
+        version: '1.0.2',
+        darwin_versions: [ '2.0.0', '2.2.0' ],
 )
 
 libxkbfile_headers = [
